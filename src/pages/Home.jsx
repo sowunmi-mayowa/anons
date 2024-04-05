@@ -15,6 +15,7 @@ const Home = () => {
     }
   return (
     <div>
+        <h1> welcome {auth.currentUser.email} </h1>
         <button onClick={logOut}>Sign out</button>
     </div>
   )
