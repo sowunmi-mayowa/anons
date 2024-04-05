@@ -1,9 +1,10 @@
-import { auth } from "../config/config"
+import { auth,provider } from "../config/config"
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup,GoogleAuthProvider } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
+
 
 const Login = () => {
 
@@ -32,12 +33,34 @@ const Login = () => {
           });
         reset()
     }
+
+    const signInWithGoogle = () => {
+        signInWithPopup(auth, provider)
+        .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            const user = result.user;
+            console.log(user)
+            navigate("/home")
+            // IdP data available using getAdditionalUserInfo(result)
+            // ...
+        }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorMessage)
+            // ...
+        });
+    }
+
   return (
     <div className="mt-8">
         <div className="flex justify-center items-center w-4/5 md:w-1/2 mx-auto">
             <form className="flex flex-col w-full h-full pb-6 text-center bg-white rounded-3xl" onSubmit={handleSubmit(onSubmitHandler)}>
                 <h3 className="mb-3 text-4xl font-extrabold text-dark-grey-900">Sign In</h3>
-                <div  className="flex items-center justify-center w-full py-4 mb-6 text-sm font-medium transition duration-300 rounded-2xl text-grey-900 bg-grey-300 hover:bg-grey-400 focus:ring-4 focus:ring-grey-300 cursor-pointer">
+                <div  className="flex items-center justify-center w-full py-4 mb-6 text-sm font-medium transition duration-300 rounded-2xl text-grey-900 bg-grey-300 hover:bg-grey-400 focus:ring-4 focus:ring-grey-300 cursor-pointer" onClick={signInWithGoogle}>
                     <img className="h-5 mr-2" src="https://raw.githubusercontent.com/Loopple/loopple-public-assets/main/motion-tailwind/img/logos/logo-google.png" alt="google" />
                     Sign in with Google
                 </div>
