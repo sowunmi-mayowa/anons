@@ -63,16 +63,26 @@ const Register = () => {
     //sign in with google
     const signInWithGoogle = () => {
         signInWithPopup(auth, provider)
-        .then((result) => {
+        .then(async(result) => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
             console.log(user)
+
+            // add to db
+            try{
+
+                const docRef = await addDoc(collection(db, "users-info"), {
+                    name: auth.currentUser.displayName,
+                    uid: auth.currentUser.uid
+                });
+            }
+            catch(error) {
+                console.log(error.message)
+            }
             navigate("/home")
-            // IdP data available using getAdditionalUserInfo(result)
-            // ...
         }).catch((error) => {
             // Handle Errors here.
             const errorCode = error.code;
