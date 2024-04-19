@@ -4,10 +4,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { signInWithEmailAndPassword, signInWithPopup,GoogleAuthProvider } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
 
 
 const Login = () => {
-
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const schema = yup.object().shape({
@@ -18,20 +19,32 @@ const Login = () => {
         resolver: yupResolver(schema),
     });
 
-    const onSubmitHandler = (data) => {
-        console.log({data})
-        signInWithEmailAndPassword(auth, data.email, data.password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            console.log(user)
-            navigate("/home")
-          })
-          .catch((error) => {
-            const errorMessage = error.message;
-            console.log(errorMessage);
-          });
-        reset()
+    const onSubmitHandler = async(data) => {
+        try{
+            await signInWithEmailAndPassword(auth, data.email, data.password);
+            navigate("/home");
+        }catch(error){
+            if (error.code === 'auth/user-not-found') {
+                setError("User dooes not exist");
+            }else if(error.code  === "auth/invalid-credential"){
+                setError("Incorrect username or password");
+            }
+            else{
+                setError(error.message)
+            }
+        }
+        //
+        // .then((userCredential) => {
+        //     // Signed in 
+        //     const user = userCredential.user;
+        //     console.log(user)
+        //     
+        //   })
+        //   .catch((error) => {
+        //     const errorMessage = error.message;
+        //     console.log(errorMessage);
+        //   });
+        // reset()
     }
 
     const signInWithGoogle = () => {
@@ -69,7 +82,7 @@ const Login = () => {
                     <p className="mx-4 text-grey-600">or</p>
                     <hr className="h-0 border-b border-solid border-grey-500 grow" />
                 </div>
-                
+                <p>{error && error}</p>
                 <div className="flex flex-col flex-start">
                     <label htmlFor="email" className="mb-2 text-sm text-start text-grey-900">Email*</label>
                     <input id="email" type="email" placeholder="mail@loopple.com" className="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-grey-400 mb-7 placeholder:text-grey-700 bg-grey-200 text-dark-grey-900 rounded-2xl bg-gray-200" {...register("email")}/>

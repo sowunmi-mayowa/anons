@@ -7,19 +7,22 @@ const ProtectedRoute = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        setIsLoading(false);
-      });
-  
-      return () => unsubscribe();
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            setIsLoading(false);
+        });
+
+        return () => unsubscribe();
     }, []);
 
     if (isLoading) {
-      return <div>Loading...</div>;
+        return <div>Loading...</div>;
     }
-  return auth.currentUser ? ( < Outlet />) : (
-    <Navigate to="/login" state={{from: location}} replace />
-  )
-}
 
-export default ProtectedRoute
+    return auth.currentUser ? (
+        <Outlet />
+    ) : (
+        <Navigate to="/login" state={{ from: location }} replace />
+    );
+};
+
+export default ProtectedRoute;

@@ -1,12 +1,15 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { auth, provider } from "../config/config";
+import { auth, provider, db } from "../config/config";
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
+import { collection, addDoc } from "firebase/firestore";
+import { useState } from "react";
 
 const Register = () => {
-
+    const [error, seterror] = useState("");
+    const [uid, setUid] = useState("")
     const navigate = useNavigate();
 
     const schema = yup.object().shape({
@@ -18,18 +21,43 @@ const Register = () => {
         resolver: yupResolver(schema),
     });
 
+    const addUsers = async(data) => {
+        try{
+            const userCredential= await createUserWithEmailAndPassword(auth, data.email, data.password);
+            const user = userCredential.user;
+            const uid = user.uid
+            navigate("/home");
+            reset();
+            return uid;
+        }catch(error){
+            if (error.code === 'auth/email-already-in-use') {
+                seterror('Email is already registered. Please use a different email.');
+              } else {
+                console.log(error.message);
+              }
+        }
+    }
+    const addUsersToDB = async(data, uid) => {
+        try{
 
-    const onSubmitHandler = (data) => {
-        createUserWithEmailAndPassword(auth, data.email, data.password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                console.log(user)
-                navigate("/home")
-            })
-            .catch(error => {
-                console.log(error.message)
-            })
-        reset()
+            const docRef = await addDoc(collection(db, "users-info"), {
+                name: data.username,
+                uid: uid
+            });
+        }
+        catch(error) {
+            console.log(error.message)
+        }
+    }
+    const onSubmitHandler = async(data) => {
+        try {
+
+            const uid = await addUsers(data);
+            await addUsersToDB(data, uid);
+        }
+        catch(error){
+            console.log(error.message)
+        }
     }
 
     //sign in with google
@@ -67,9 +95,10 @@ const Register = () => {
                         <p className="mx-4 text-grey-600">or</p>
                         <hr className="h-0 border-b border-solid border-grey-500 grow" />
                     </div>
+                    <p className="text-red-700 font-semibold">{error && error}</p>
                     <div className="flex flex-col flex-start">
                         <label htmlFor="username" className="mb-2 text-sm text-start text-grey-900">Username*</label>
-                        <input id="email" type="email" placeholder="mail@loopple.com" className="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-grey-400 bg-gray-200 mb-7 placeholder:text-grey-700 bg-grey-200 text-dark-grey-900 rounded-2xl" {...register("username")} />
+                        <input id="username" type="text" placeholder="mail@loopple.com" className="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-grey-400 bg-gray-200 mb-7 placeholder:text-grey-700 bg-grey-200 text-dark-grey-900 rounded-2xl" {...register("username")} />
                         <p className="text-red-800 text-xs">{errors.username?.message}</p>
                     </div>
                     <div className="flex flex-col flex-start">
