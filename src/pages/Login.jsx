@@ -1,10 +1,11 @@
-import { auth,provider } from "../config/config"
+import { auth,provider, db } from "../config/config"
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { signInWithEmailAndPassword, signInWithPopup,GoogleAuthProvider } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
+import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 
 
 const Login = () => {
@@ -33,38 +34,41 @@ const Login = () => {
                 setError(error.message)
             }
         }
-        //
-        // .then((userCredential) => {
-        //     // Signed in 
-        //     const user = userCredential.user;
-        //     console.log(user)
-        //     
-        //   })
-        //   .catch((error) => {
-        //     const errorMessage = error.message;
-        //     console.log(errorMessage);
-        //   });
-        // reset()
+        
+         reset()
     }
 
     const signInWithGoogle = () => {
         signInWithPopup(auth, provider)
-        .then((result) => {
+        .then(async(result) => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
             console.log(user)
-            navigate("/home")
-            // IdP data available using getAdditionalUserInfo(result)
-            // ...
+            
+            const userDocRef = doc(db, 'users-info', user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (userDocSnap.exists()) {
+                navigate("/home")
+            }else{
+                try {
+                    await addDoc(collection(db, "users-info"), {
+                        name: user.displayName,
+                        uid: user.uid
+                    });
+                    navigate("/home");
+                } catch (error) {
+                    console.log(error.message);
+                }
+            }
+
         }).catch((error) => {
-            // Handle Errors here.
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorMessage)
-            // ...
         });
     }
 
