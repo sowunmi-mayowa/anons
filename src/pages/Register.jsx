@@ -9,7 +9,6 @@ import { useState } from "react";
 
 const Register = () => {
     const [error, seterror] = useState("");
-    const [uid, setUid] = useState("")
     const navigate = useNavigate();
 
     const schema = yup.object().shape({
