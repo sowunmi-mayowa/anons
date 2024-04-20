@@ -3,6 +3,7 @@ import {  signOut } from "firebase/auth";
 import {useNavigate } from 'react-router-dom'
 import { collection, query, where, getDocs  } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
     const naviagte = useNavigate();
@@ -34,13 +35,14 @@ const Home = () => {
       };
       getUserName();
     }, []);
-    console.log(userInfo)
     
    
   return (
     <div>
       <h1>welcome {userInfo.name ? userInfo.name : auth.currentUser.displayName}</h1>
-        <button onClick={logOut}>Sign out</button>
+      <p>Copy your link: <Link to={`/${auth.currentUser.uid}`}>Link</Link></p>
+      <p><Link to={"/messages"}>view your messages</Link></p>
+        <button className="bg-black text-white px-4 py2" onClick={logOut}>Sign out</button>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import WriteMessage from "./pages/WriteMessage";
+import Messages from "./pages/Messages";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Home />} />
         <Route path="/:id" element={<WriteMessage />} />
+        <Route path="/messages" element={<Messages />} />
       </Routes>
     </BrowserRouter>
   );
