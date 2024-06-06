@@ -2,9 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from './pages/Login';
 import Register from "./pages/Register";
 import Home from "./pages/Home";
-import ProtectedRoute from "./components/ProtectedRoute";
 import WriteMessage from "./pages/WriteMessage";
 import Messages from "./pages/Messages";
+
 
 function App() {
   return (

@@ -4,6 +4,7 @@ import {useNavigate } from 'react-router-dom'
 import { collection, query, where, getDocs  } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const Home = () => {
     const naviagte = useNavigate();
@@ -18,6 +19,7 @@ const Home = () => {
           });
     }
 
+    
     //get username 
     useEffect(() => {
       const getUserName = async () => {
@@ -39,6 +41,7 @@ const Home = () => {
    
   return (
     <div>
+      <Navbar />
       <h1>welcome {userInfo.name ? userInfo.name : auth.currentUser.displayName}</h1>
       <p>Copy your link: <Link to={`/${auth.currentUser.uid}`}>Link</Link></p>
       <p><Link to={"/messages"}>view your messages</Link></p>

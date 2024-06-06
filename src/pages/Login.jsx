@@ -6,10 +6,12 @@ import { signInWithEmailAndPassword, signInWithPopup,GoogleAuthProvider } from "
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { doc, getDoc, addDoc, collection } from "firebase/firestore";
+import { useMutation } from "@tanstack/react-query";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Login = () => {
-    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const schema = yup.object().shape({
@@ -20,22 +22,28 @@ const Login = () => {
         resolver: yupResolver(schema),
     });
 
-    const onSubmitHandler = async(data) => {
-        try{
-            await signInWithEmailAndPassword(auth, data.email, data.password);
-            navigate("/home");
-        }catch(error){
-            if (error.code === 'auth/user-not-found') {
-                setError("User dooes not exist");
-            }else if(error.code  === "auth/invalid-credential"){
-                setError("Incorrect username or password");
-            }
-            else{
-                setError(error.message)
-            }
+    const login = async (data) => {
+        const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+        return userCredential;
+    };
+
+    const {mutate, error} = useMutation({
+        mutationFn: login,
+        onSuccess: () => {
+            toast.success("Login successful", {
+                position: "top-right",
+                type: "success"
+            })
+            setInterval(() => {navigate("/home")}, 3000)
+            
+        },
+        onError: () => {
+            console.log(error)
         }
-        
-         reset()
+    })
+    const onSubmitHandler = async(data) => {
+        mutate(data);
+        reset();
     }
 
     const signInWithGoogle = () => {
@@ -106,6 +114,7 @@ const Login = () => {
                 <p className="text-sm leading-relaxed text-grey-900">Dont have an account? <Link to="/register"  className="font-bold text-grey-700">Sign up</Link></p>
             </form>
         </div>
+        <ToastContainer />
     </div>
 )
 }

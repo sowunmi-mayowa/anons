@@ -4,30 +4,71 @@ import * as yup from "yup";
 import { auth, db } from "../config/config";
 import { useParams } from "react-router-dom";
 import { collection, addDoc } from "firebase/firestore";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const WriteMessage = () => {
 
-  const { id } = useParams()
+  const { id } = useParams();
+  const queryClient = useQueryClient();
 
   const schema = yup.object().shape({
     message: yup.string().required(),
-})
-const { register, handleSubmit, formState: { errors }, reset } = useForm({
-    resolver: yupResolver(schema),
-});
+  })
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+      resolver: yupResolver(schema),
+  });
 
-const onSubmitHandler = async (data) => {
-  try{
-    const docref = await addDoc(collection(db, "messages"), {
-      message: data.message,
-      uid: id
-    })
-    alert("message sent")
-  }catch(error){
-    console.log(error.message )
+
+  const {mutate, error, isPending } = useMutation({
+    mutationFn: async(newMessage) => {
+      await addDoc(collection(db, "messages"), newMessage);
+    },
+    onSuccess: () => {
+      toast.success("Message sent!", {
+        position: "bottom-right",
+        type: "success"
+      });
+      reset();
+    },
+    onError: () => {
+      toast.error("Some error occured", {
+        position: "bottom-right",
+        type: "error"
+      })
+      console.log(error);
+    }
+  })
+  if (error) {
+    console.log(error)
   }
-  reset();
-}
+ 
+  
+  // const mutation = useMutation(addMessage, {
+  //   onSuccess : () => {
+  //     toast.success("Message sent!", {
+  //       position: "bottom-right",
+  //       type: "success"
+  //     });
+  //     reset();
+  //     queryClient.invalidateQueries('messages');
+  //   },
+  //   onError: (error) => {
+  //     console.error('Error adding message:', error);
+  //     toast.error("Failed to send message!", {
+  //       position: "bottom-right",
+  //       type: "error"
+  //     });
+  //   }
+  // })
+  const onSubmitHandler = async (data) => {
+   mutate({
+      message: data.message,
+      uid: id,
+      createdAt: new Date()
+    })
+  }
   return (
     <div>
       <h1>Send message</h1>
@@ -35,9 +76,12 @@ const onSubmitHandler = async (data) => {
          <div>
           <p> {errors.message?.message} </p>
             <textarea name="message" id="message" cols="30" rows="10" className='border-2 border-black' {...register("message")}></textarea> <br />
-            <input type="submit"  className="bg-blue-500 text-black font-bold text-lg capitalize px-6 py-2 cursor-pointer" onClick={handleSubmit(onSubmitHandler)} />
+            <button className="bg-blue-500 text-black font-bold text-lg capitalize px-6 py-2 cursor-pointer" onClick={handleSubmit(onSubmitHandler)}> {
+              !isPending ? ("send message") : ("message sent")
+            } </button>
          </div>
       </form>
+      <ToastContainer />
     </div>
   )
 }
