@@ -42,7 +42,7 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-      <h1>welcome {userInfo.name ? userInfo.name : auth.currentUser.displayName}</h1>
+      {/* <h1>welcome {userInfo.name ? userInfo.name : auth.currentUser.displayName}</h1> */}
       <p>Copy your link: <Link to={`/${auth.currentUser.uid}`}>Link</Link></p>
       <p><Link to={"/messages"}>view your messages</Link></p>
         <button className="bg-black text-white px-4 py2" onClick={logOut}>Sign out</button>
