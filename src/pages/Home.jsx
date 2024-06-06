@@ -1,14 +1,29 @@
 import { auth, db } from "../config/config";
-import {  signOut } from "firebase/auth";
+import {  signOut, onAuthStateChanged } from "firebase/auth";
 import {useNavigate } from 'react-router-dom'
 import { collection, query, where, getDocs  } from "firebase/firestore";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useQuery } from "@tanstack/react-query";
+import { InfinitySpin } from "react-loader-spinner";
+import { useEffect } from "react";
+
 
 const Home = () => {
-    const naviagte = useNavigate();
-    const [userInfo, setUserInfo] = useState({})
+
+  const naviagte = useNavigate();
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        naviagte("/login");
+      }
+    });
+    return () => unsubscribe();
+  }, [naviagte])
+    
+
     const logOut = () => {
         signOut(auth).then(() => {
             // Sign-out successful.
@@ -21,29 +36,51 @@ const Home = () => {
 
     
     //get username 
-    useEffect(() => {
       const getUserName = async () => {
-        try{
-          const queryDb = query(collection(db, 'users-info'), where ("uid", '==', auth.currentUser.uid));
-          const querySnapshot = await getDocs(queryDb);
 
-          querySnapshot.forEach(doc => {
-            setUserInfo(doc.data())
-          })
-        }
-        catch(error){
-          console.log(error.message)
-        }
+        const queryDb = query(collection(db, 'users-info'), where ("uid", '==', auth.currentUser.uid));
+        const querySnapshot = await getDocs(queryDb);
+        const users = [];
+
+        querySnapshot.forEach(doc => {
+          users.push(doc.data())
+        })
+        return users;
       };
-      getUserName();
-    }, []);
-    
    
+    const {data, error, isLoading} = useQuery({
+      queryKey: ["user-info"],
+      queryFn: getUserName
+    })
+    if (error) {
+      console.log(error)
+    }
+
   return (
     <div>
       <Navbar />
       {/* <h1>welcome {userInfo.name ? userInfo.name : auth.currentUser.displayName}</h1> */}
-      <p>Copy your link: <Link to={`/${auth.currentUser.uid}`}>Link</Link></p>
+      {
+        isLoading ? (
+        <div className="flex justify-center items-center h-screen flex-col">
+            <InfinitySpin
+                visible={true}
+                width="200"
+                color="#4fa94d"
+                ariaLabel="infinity-spin-loading"
+            />
+            <p className="italic">Loading ..</p>
+        </div>
+        ) : (
+          data.map(user => (
+            <div key={user.uid}>
+              <h1>{user.name}</h1>
+              <p>Copy your link: <Link to={"/"+ user.uid}>Link</Link></p>
+            </div>
+          ))
+        )
+      }
+      
       <p><Link to={"/messages"}>view your messages</Link></p>
         <button className="bg-black text-white px-4 py2" onClick={logOut}>Sign out</button>
     </div>
