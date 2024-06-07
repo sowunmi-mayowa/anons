@@ -5,7 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { InfinitySpin } from "react-loader-spinner";
 
 const Messages = () => {
-
+    console.log("user" ,auth.currentUser)
+    
     const getMessages = async() => {
            
         const queryDb = query(collection(db, "messages"), where ("uid", '==', auth.currentUser.uid));
@@ -25,7 +26,6 @@ const Messages = () => {
     }) 
 
     if (error) return <div>sorry an error occured..... try again later</div>;
-
   return (
     <div>
         {

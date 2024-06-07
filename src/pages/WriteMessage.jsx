@@ -45,23 +45,6 @@ const WriteMessage = () => {
   }
  
   
-  // const mutation = useMutation(addMessage, {
-  //   onSuccess : () => {
-  //     toast.success("Message sent!", {
-  //       position: "bottom-right",
-  //       type: "success"
-  //     });
-  //     reset();
-  //     queryClient.invalidateQueries('messages');
-  //   },
-  //   onError: (error) => {
-  //     console.error('Error adding message:', error);
-  //     toast.error("Failed to send message!", {
-  //       position: "bottom-right",
-  //       type: "error"
-  //     });
-  //   }
-  // })
   const onSubmitHandler = async (data) => {
    mutate({
       message: data.message,

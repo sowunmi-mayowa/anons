@@ -6,12 +6,13 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useQuery } from "@tanstack/react-query";
 import { InfinitySpin } from "react-loader-spinner";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 const Home = () => {
 
   const naviagte = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -47,15 +48,16 @@ const Home = () => {
         })
         return users;
       };
-   
+      
     const {data, error, isLoading} = useQuery({
       queryKey: ["user-info"],
-      queryFn: getUserName
+      queryFn: getUserName,
+      enabled: !currentUser
     })
     if (error) {
       console.log(error)
     }
-
+    
   return (
     <div>
       <Navbar />
@@ -72,7 +74,7 @@ const Home = () => {
             <p className="italic">Loading ..</p>
         </div>
         ) : (
-          data.map(user => (
+          data && data.map(user => (
             <div key={user.uid}>
               <h1>{user.name}</h1>
               <p>Copy your link: <Link to={"/"+ user.uid}>Link</Link></p>

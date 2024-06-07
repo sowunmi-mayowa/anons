@@ -34,11 +34,17 @@ const Login = () => {
                 position: "top-right",
                 type: "success"
             })
-            setInterval(() => {navigate("/home")}, 3000)
+            navigate("/home")
             
         },
         onError: () => {
-            console.log(error)
+            if (error.code === 'auth/user-not-found') {
+                setCustomError("User does not exist");
+            } else if (error.code === "auth/invalid-credential") {
+                setCustomError("Incorrect username or password");
+            } else {
+                setCustomError(error.message);
+            }
         }
     })
     const onSubmitHandler = async(data) => {
