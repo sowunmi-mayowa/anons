@@ -60,7 +60,7 @@ const Home = () => {
     if (error) {
       console.log(error)
     }
-    const link = `https://anons-five.vercel.app/`;
+    const link = `https://anons-five.vercel.app/${auth.currentUser.uid}`;
     const copyToClipboard = () => {
       navigator.clipboard.writeText(link)
         .then(() => {
