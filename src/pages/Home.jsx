@@ -16,7 +16,12 @@ const Home = () => {
 
   const naviagte = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
+  const [uid, setUid] = useState(null);
+
   useEffect(() => {
+    if (auth.currentUser) {
+      setUid(auth.currentUser.uid);
+    }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
@@ -62,23 +67,31 @@ const Home = () => {
     }
     const link = `https://anons-five.vercel.app/${auth.currentUser.uid}`;
     const copyToClipboard = () => {
-      navigator.clipboard.writeText(link)
-        .then(() => {
-          toast.success("link copied to clipboard", {
-            type: "success",
-            position: "top-right",
-            autoClose: "3000",
-            
+      if(uid){
+        navigator.clipboard.writeText(link)
+          .then(() => {
+            toast.success("link copied to clipboard", {
+              type: "success",
+              position: "top-right",
+              autoClose: "2000",
+              
+            })
           })
-        })
-        .catch((err) => {
-          toast.error("link copied to clipboard", {
-            type: "error",
-            position: "top-right",
-            autoClose: "3000",
-            
-          })
+          .catch((err) => {
+            toast.error("link copied to clipboard", {
+              type: "error",
+              position: "top-right",
+              autoClose: "2000",
+              
+            })
+          });
+      }else{
+        toast.error("User not authenticated", {
+          position: "top-right",
+          autoClose: 3000,
         });
+        naviagte("/login")
+      }
     };
   
 
@@ -124,7 +137,7 @@ const Home = () => {
       <Link to={"/profile"} className="flex w-full">
         <button className='w-full capitalize py-4 px-2 text-white bg-anonBlue mx-6 font-raleway text-lg text-center my-2 rounded-lg font-semibold'>profile</button>
       </Link>
-        <button className="bg-black text-white px-4 py2" onClick={logOut}>Sign out</button>
+        {/* <button className="bg-black text-white px-4 py2" onClick={logOut}>Sign out</button> */}
         < ToastContainer />
     </div>
   )
