@@ -8,6 +8,10 @@ export default {
     extend: {
       fontFamily: {
         raleway: ['Raleway', 'sans-serif']
+      },
+      colors:{
+        anonRed: "#E65050",
+        anonBlue: "#009CBB"
       }
     },
   },
