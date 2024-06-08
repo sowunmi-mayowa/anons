@@ -3,10 +3,13 @@ import {  signOut, onAuthStateChanged } from "firebase/auth";
 import {useNavigate } from 'react-router-dom'
 import { collection, query, where, getDocs  } from "firebase/firestore";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import { useQuery } from "@tanstack/react-query";
 import { InfinitySpin } from "react-loader-spinner";
 import { useEffect, useState } from "react";
+import copy from "../assets/copy.png"
+import avatar from "../assets/avatar.png"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Home = () => {
@@ -57,10 +60,32 @@ const Home = () => {
     if (error) {
       console.log(error)
     }
-    
+    const link = `https://anons-five.vercel.app/${data[0].uid}`;
+    const copyToClipboard = () => {
+      navigator.clipboard.writeText(link)
+        .then(() => {
+          toast.success("link copied to clipboard", {
+            type: "success",
+            position: "top-right",
+            autoClose: "3000",
+            
+          })
+        })
+        .catch((err) => {
+          toast.error("link copied to clipboard", {
+            type: "error",
+            position: "top-right",
+            autoClose: "3000",
+            
+          })
+        });
+    };
+  
+
   return (
-    <div>
-      <Navbar />
+    <div style={{
+      backgroundImage: "linear-gradient(104deg, #DFD6F6, #BECBF7)",
+    }} className="h-screen pt-20 px-6 ">
       {/* <h1>welcome {userInfo.name ? userInfo.name : auth.currentUser.displayName}</h1> */}
       {
         isLoading ? (
@@ -75,16 +100,32 @@ const Home = () => {
         </div>
         ) : (
           data && data.map(user => (
-            <div key={user.uid}>
-              <h1>{user.name}</h1>
-              <p>Copy your link: <Link to={"/"+ user.uid}>Link</Link></p>
+            <div key={user.uid} className="flex justify-center items-center flex-col">
+              <div className="max-w-[80px] py-4">
+                <img src={avatar}  className="w-full h-full " />
+              </div>
+              <div className="mb-6 flex flex-col items-center px-6 ">
+                <h1 className="capitalize font-raleway text-2xl text-center text-[#009CBB] font-bold">{user.name}'s Profile</h1>
+                <div className="max-w-[310px]"> 
+                  <p className="text-anonRed font-semibold text-[16px] text-center font-raleway break-words px-8">https://annon.com/{user.uid}</p>
+                </div>
+                <img src={copy} alt="icon" className="w-5 cursor-pointer" onClick={copyToClipboard} />
+                <p className="text-anonBlue font-raleway text-center pt-6 text-sm font-semibold">Share your link and get responses from your friend, you cannot know who send it.</p>
+              </div>
             </div>
           ))
         )
       }
       
-      <p><Link to={"/messages"}>view your messages</Link></p>
-        <button className="bg-black text-white px-4 py2" onClick={logOut}>Sign out</button>
+      
+      <Link to={"/messages"} className="flex w-full">
+        <button className='w-full capitalize py-4 px-2 text-white bg-anonRed mx-6 font-raleway text-lg text-center my-4 rounded-lg font-semibold'>view messages</button>
+      </Link>
+      <Link to={"/profile"} className="flex w-full">
+        <button className='w-full capitalize py-4 px-2 text-white bg-anonBlue mx-6 font-raleway text-lg text-center my-2 rounded-lg font-semibold'>profile</button>
+      </Link>
+        {/* <button className="bg-black text-white px-4 py2" onClick={logOut}>Sign out</button> */}
+        < ToastContainer />
     </div>
   )
 }
