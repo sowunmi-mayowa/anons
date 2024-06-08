@@ -60,7 +60,7 @@ const Home = () => {
     if (error) {
       console.log(error)
     }
-    const link = `https://anons-five.vercel.app/${data[0].uid}`;
+    const link = `https://anons-five.vercel.app/`;
     const copyToClipboard = () => {
       navigator.clipboard.writeText(link)
         .then(() => {
@@ -124,7 +124,7 @@ const Home = () => {
       <Link to={"/profile"} className="flex w-full">
         <button className='w-full capitalize py-4 px-2 text-white bg-anonBlue mx-6 font-raleway text-lg text-center my-2 rounded-lg font-semibold'>profile</button>
       </Link>
-        {/* <button className="bg-black text-white px-4 py2" onClick={logOut}>Sign out</button> */}
+        <button className="bg-black text-white px-4 py2" onClick={logOut}>Sign out</button>
         < ToastContainer />
     </div>
   )
