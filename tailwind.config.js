@@ -11,7 +11,8 @@ export default {
       },
       colors:{
         anonRed: "#E65050",
-        anonBlue: "#009CBB"
+        anonBlue: "#009CBB",
+        anonLightBlue: "#D7E3EC"
       }
     },
   },
