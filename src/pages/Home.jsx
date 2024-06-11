@@ -120,7 +120,7 @@ const Home = () => {
               <div className="mb-6 flex flex-col items-center px-6 ">
                 <h1 className="capitalize font-raleway text-2xl text-center text-[#009CBB] font-bold">{user.name}'s Profile</h1>
                 <div className="max-w-[310px]"> 
-                  <p className="text-anonRed font-semibold text-[16px] text-center font-raleway break-words px-8">https://annon.com/{user.uid}</p>
+                  <p className="text-anonRed font-semibold text-[16px] text-center font-raleway break-words px-8">https://anons-five.vercel.app/{user.uid}</p>
                 </div>
                 <img src={copy} alt="icon" className="w-5 cursor-pointer" onClick={copyToClipboard} />
                 <p className="text-anonBlue font-raleway text-center pt-6 text-sm font-semibold">Share your link and get responses from your friend, you cannot know who send it.</p>
