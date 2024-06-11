@@ -3,9 +3,12 @@ import { auth, db } from "../config/config";
 import { collection, query, where, getDocs  } from "firebase/firestore";
 import { useQuery } from "@tanstack/react-query";
 import { InfinitySpin } from "react-loader-spinner";
+import arrowBack from "../assets/arrowBack.png"
+import Navbar from "../components/Navbar";
+import { Link } from "react-router-dom";
+import avatar from "../assets/avatar.png"
 
 const Messages = () => {
-    console.log("user" ,auth.currentUser)
     
     const getMessages = async() => {
            
@@ -24,10 +27,17 @@ const Messages = () => {
         queryKey: ['messages'],
         queryFn: getMessages
     }) 
-
     if (error) return <div>sorry an error occured..... try again later</div>;
+
   return (
-    <div>
+    <div style={{
+        backgroundImage: "linear-gradient(104deg, #DFD6F6, #BECBF7)",
+      }} className="h-screen font-raleway" >
+        <Navbar />
+        <Link to="/home" >
+            <img src={arrowBack} alt="back icon" className="w-8 pt-3 ml-4" />
+        </Link>
+        <div className="bg-white rounded-t-3xl p-8 mt-8 overflow-y-scroll h-[90vh]">
         {
             isLoading ? (
                 <div className="flex justify-center items-center h-screen flex-col">
@@ -41,12 +51,19 @@ const Messages = () => {
                 </div>
             ) : (
                 data.map(message => (
-                    <div key={Math.random()}>
-                        <p>{message.message}</p>
+                    <div key={Math.random()} className="flex justify-center items-center">
+                        <div className="flex gap-4 justify-start items-start bg-anonLightBlue my-2 w-full p-6 rounded-2xl">
+                           <div className="w-12 h-12 rounded-full bg-anonBlue"></div>
+                            <div>
+                                <h1 className="text-lg font-bold capitalize">Anon</h1>
+                                <p className="text-sm text-anonBlue">{message.message}</p>
+                            </div>
+                        </div>
                     </div>
                 ))
             )
         }
+        </div>
     </div>
   )
 }
