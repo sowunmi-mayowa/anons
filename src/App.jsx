@@ -5,6 +5,8 @@ import Login from "./pages/Login"
 import Messages from "./pages/Messages"
 import WriteMessage from "./pages/WriteMessage"
 import Home from "./pages/Home"
+import '@radix-ui/themes/styles.css';
+import { Theme } from '@radix-ui/themes';
 
 const App = () => {
   const router = createBrowserRouter(
@@ -22,7 +24,9 @@ const App = () => {
   )
   return (
     <div>
-      <RouterProvider router={router} />
+      <Theme>
+        <RouterProvider router={router} />
+      </Theme>
     </div>
   )
 }
