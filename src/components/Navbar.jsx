@@ -14,13 +14,13 @@ const Navbar = () => {
         right: 0
       }} className='flex justify-between text-white p-6 w-full h-20 rounded-t-3xl z-10'>
         <div className='flex justify-between items-center w-full px-8'>
-          <Link to='/home' className='w-8'>
+          <Link to='/home' className='max-w-[30px]'>
             <img src={home} alt="icons" className='w- full h-full' />
           </Link>
-          <Link to='/messages' className='w-8'>
+          <Link to='/messages' className='max-w-[30px]'>
             <img src={message} alt="icons" className='w- full h-full' />
           </Link>
-          <Link to='/profile' className='w-8'>
+          <Link to='/profile' className='max-w-[30px]'>
             <img src={avatar} alt="icons" className='w- full h-full' />
           </Link>
         </div>
