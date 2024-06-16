@@ -7,6 +7,7 @@ import WriteMessage from "./pages/WriteMessage"
 import Home from "./pages/Home"
 import '@radix-ui/themes/styles.css';
 import { Theme } from '@radix-ui/themes';
+import Profile from "./pages/Profile";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/messages" element={< Messages />} />
         <Route path="/:id" element={< WriteMessage />} />
         <Route path="/home" element={< Home />} />
+        <Route path="/profile" element={< Profile />} />
 
       </>
     )
