@@ -41,6 +41,7 @@ const Register = () => {
 
             const docRef = await addDoc(collection(db, "users-info"), {
                 name: data.username,
+                email: data.email,
                 uid: uid
             });
         }
@@ -125,8 +126,8 @@ const Register = () => {
                         </label>
                         <a className="mr-4 text-sm font-medium text-purple-blue-500">Forget password?</a>
                     </div>
-                    <button className="bg-blue-600 h-12 rounded-lg text-white text-lg font-semibold" onClick={handleSubmit(onSubmitHandler)}>Sign In</button>
-                    <p className="text-sm leading-relaxed text-grey-900">Already have an account? <Link to="/login"  className="font-bold text-grey-700">Sign up</Link></p>
+                    <button className="bg-blue-600 h-12 rounded-lg text-white text-lg font-semibold" onClick={handleSubmit(onSubmitHandler)}>Sign up</button>
+                    <p className="text-sm leading-relaxed text-grey-900">Already have an account? <Link to="/login"  className="font-bold text-grey-700">Sign in</Link></p>
                 </form>
             </div>
         </div>

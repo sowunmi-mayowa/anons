@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 const Welcome = () => {
   return (
-    <div className='bg-[#BECBF7] h-screen flex flex-col justify-center items-start pt-8'>
+    <div className='bg-[#BECBF7] h-screen flex flex-col justify-center items-start py-10'>
         <h1 className='text-[#009CBB] text-2xl font-bold capitalize px-6 font-raleway'>anons</h1>
         <div className='my-8 '>
             <img src={hero} alt="hero img" className='w-full h-full' />

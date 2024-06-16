@@ -32,17 +32,6 @@ const Home = () => {
     return () => unsubscribe();
   }, [naviagte])
     
-
-    const logOut = () => {
-        signOut(auth).then(() => {
-            // Sign-out successful.
-            naviagte("/login")
-          }).catch((error) => {
-            // An error happened.
-            console.log(error.message);
-          });
-    }
-
     
     //get username 
       const getUserName = async () => {

@@ -82,7 +82,7 @@ const Messages = () => {
                             <Dialog.Overlay className="fixed inset-0 bg-black/50" />
                             <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-anonLightBlue text-gray-500 p-4 rounded-lg w-3/4" ref={dialogRef}  >
                                 <p> {message.message} </p>
-                                <button className="bg-anonBlue text-white px-4 py-2 mt-4 rounded-lg" onClick={handleSaveImg}>Save IMG</button>
+                                {/* <button className="bg-anonBlue text-white px-4 py-2 mt-4 rounded-lg" onClick={handleSaveImg}>Save IMG</button> */}
                             </Dialog.Content>
                             </Dialog.Portal>
                         </Dialog.Root>
