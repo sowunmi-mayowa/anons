@@ -112,7 +112,7 @@ const Home = () => {
                   <p className="text-anonRed font-semibold text-[16px] text-center font-raleway break-words px-8">https://anons-five.vercel.app/{user.uid}</p>
                 </div>
                 <img src={copy} alt="icon" className="w-5 cursor-pointer" onClick={copyToClipboard} />
-                <p className="text-anonBlue font-raleway text-center pt-6 text-sm font-semibold">Share your link and get responses from your friend, you cannot know who send it.</p>
+                <p className="text-anonBlue font-raleway text-center pt-6 text-sm font-semibold">Share your link and get responses from your friend, you cannot know who sent it.</p>
               </div>
             </div>
           ))
