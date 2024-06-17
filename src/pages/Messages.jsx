@@ -44,7 +44,7 @@ const Messages = () => {
           link.click();
         }
       };
-
+     console.log(data)
   return (
     <div style={{
         backgroundImage: "linear-gradient(104deg, #DFD6F6, #BECBF7)",
@@ -66,6 +66,7 @@ const Messages = () => {
                     <p className="italic">Loading messaegs ..</p>
                 </div>
             ) : (
+                data.length == 0 ? (<p className="text-anonRed text-lg font-raleway">No messages yet, share your link to receive meessages.</p>) :
                 data.map(message => (
                     <div key={Math.random()} className="flex justify-center items-center">
                         <Dialog.Root >
