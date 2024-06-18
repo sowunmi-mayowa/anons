@@ -44,6 +44,14 @@ const Messages = () => {
           link.click();
         }
       };
+
+      const truncateMessage = (message, maxWords) => {
+        const words = message.split(' ');
+        if (words.length > maxWords) {
+          return words.slice(0, maxWords).join(' ') + '...';
+        }
+        return message;
+      };
      
   return (
     <div style={{
@@ -72,10 +80,10 @@ const Messages = () => {
                         <Dialog.Root >
                             <Dialog.Trigger className="w-screen" >
                             <div className="flex gap-4 justify-start items-start bg-anonLightBlue my-2 w-full p-6 rounded-2xl">
-                              <div className="w-12 h-12 rounded-full bg-anonBlue"></div>
+                              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-anonBlue"></div>
                             <div className="flex flex-col items-start">
                                 <h1 className="text-lg font-bold capitalize">Anon</h1>
-                                <p className="text-sm text-anonBlue">{message.message}</p>
+                                <p className="text-sm text-anonBlue text-left">{truncateMessage(message.message, 10)}</p>
                             </div>
                         </div>
                             </Dialog.Trigger>
