@@ -61,7 +61,7 @@ const Messages = () => {
         <Link to="/home" >
             <img src={arrowBack} alt="back icon" className="w-8 pt-3 ml-4" />
         </Link>
-        <div className="bg-white rounded-t-3xl p-8 mt-8 overflow-y-scroll h-[90vh]">
+        <div className="bg-white rounded-t-3xl p-8 mt-8 overflow-y-scroll pb-20 h-[90vh]">
         {
             isLoading ? (
                 <div className="flex justify-center items-center h-screen flex-col">
