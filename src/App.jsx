@@ -10,6 +10,7 @@ import { Theme } from '@radix-ui/themes';
 import Profile from "./pages/Profile";
 import Error from './components/Error'
 import RecoverPassword from "./pages/RecoverPassword";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
 
@@ -21,10 +22,10 @@ const App = () => {
         <Route path="/" element={<Welcome />} errorElement={< Error/>} />
         <Route path="/register" element={< Register />} errorElement={< Error/>} />
         <Route path="/login" element={< Login />} errorElement={< Error/>} />
-        <Route path="/messages" element={< Messages />} errorElement={< Error/>} />
+        <Route path="/messages" element={<ProtectedRoute> <Messages /> </ProtectedRoute>} errorElement={< Error/>} />
         <Route path="/:id" element={< WriteMessage />} errorElement={< Error/>} />
-        <Route path="/home" element={< Home />} errorElement={< Error/>} />
-        <Route path="/profile" element={< Profile />} errorElement={< Error/>} />
+        <Route path="/home" element={<ProtectedRoute> <Home /> </ProtectedRoute>} errorElement={< Error/>} />
+        <Route path="/profile" element={<ProtectedRoute> <Profile/> </ProtectedRoute>} errorElement={< Error/>} />
         <Route path="/reset-password" element={< RecoverPassword/>} errorElement={< Error/>} />
 
       </>
