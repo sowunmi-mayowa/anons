@@ -9,8 +9,12 @@ import '@radix-ui/themes/styles.css';
 import { Theme } from '@radix-ui/themes';
 import Profile from "./pages/Profile";
 import Error from './components/Error'
+import RecoverPassword from "./pages/RecoverPassword";
 
 const App = () => {
+
+  const isMobile = window.innerWidth < 768;
+  
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
@@ -21,15 +25,24 @@ const App = () => {
         <Route path="/:id" element={< WriteMessage />} errorElement={< Error/>} />
         <Route path="/home" element={< Home />} errorElement={< Error/>} />
         <Route path="/profile" element={< Profile />} errorElement={< Error/>} />
+        <Route path="/reset-password" element={< RecoverPassword/>} errorElement={< Error/>} />
 
       </>
     )
   )
   return (
     <div>
-      <Theme>
-        <RouterProvider router={router} />
-      </Theme>
+      {
+        isMobile ? (
+          <Theme>
+            <RouterProvider router={router} />
+          </Theme>
+        ) : (
+          <div className="flex justify-center items-center h-screen bg-gray-100">
+            <p className="text-xl font-semibold text-red-500">This website is unavailable on desktop. Please use a mobile device.</p>
+          </div>
+        )
+      }
     </div>
   )
 }
