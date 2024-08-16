@@ -2,9 +2,9 @@ import { auth,provider, db } from "../config/config"
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { signInWithEmailAndPassword, signInWithPopup,GoogleAuthProvider } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup,GoogleAuthProvider, getRedirectResult, signInWithRedirect } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { useMutation } from "@tanstack/react-query";
 import { ToastContainer, toast } from 'react-toastify';
@@ -51,40 +51,51 @@ const Login = () => {
         mutate(data);
         reset();
     }
-
     const signInWithGoogle = () => {
-        signInWithPopup(auth, provider)
-        .then(async(result) => {
+      // Start the sign-in process using redirect instead of popup
+      signInWithRedirect(auth, provider);
+    };
+  
+    useEffect(() => {
+      // Handle the redirect result after the user is redirected back to the app
+      getRedirectResult(auth)
+        .then(async (result) => {
+          if (result) {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
-            console.log(user)
-            
-            const userDocRef = doc(db, 'users-info', user.uid);
+            console.log(user);
+  
+            // Check if the user already exists in Firestore
+            const userDocRef = doc(db, "users-info", user.uid);
             const userDocSnap = await getDoc(userDocRef);
-
+  
+            // If user exists, navigate to home
             if (userDocSnap.exists()) {
-                navigate("/home")
-            }else{
-                try {
-                    await addDoc(collection(db, "users-info"), {
-                        name: user.displayName,
-                        uid: user.uid
-                    });
-                    navigate("/home");
-                } catch (error) {
-                    console.log(error.message);
-                }
+              navigate("/home");
+            } else {
+              // If user does not exist, add the user to Firestore
+              try {
+                await addDoc(collection(db, "users-info"), {
+                  name: user.displayName,
+                  uid: user.uid
+                });
+                navigate("/home");
+              } catch (error) {
+                console.log(error.message);
+              }
             }
-
-        }).catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorMessage)
+          }
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage);
         });
-    }
+    }, [navigate]);
 
   return (
     <div className="mt-8">
@@ -114,7 +125,7 @@ const Login = () => {
                 <div className="flex flex-row justify-between mb-8">
                     <label className="relative inline-flex items-center mr-3 cursor-pointer select-none">
                     </label>
-                    <a className="mr-4 text-sm font-medium text-purple-blue-500">Forget password?</a>
+                    <Link to={"/reset-password"} className="mr-4 text-sm font-medium text-purple-blue-500">Forget password?</Link>
                 </div>
                 <button className="bg-blue-600 h-12 rounded-lg text-white text-lg font-semibold" onClick={handleSubmit(onSubmitHandler)}>Sign In</button>
                 <p className="text-sm leading-relaxed text-grey-900">Dont have an account? <Link to="/register"  className="font-bold text-grey-700">Sign up</Link></p>
