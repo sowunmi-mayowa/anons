@@ -3,3 +3,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input:-webkit-autofill {
+    @apply bg-gray-200 !important; /* Change bg-white to whatever color you need */
+    -webkit-box-shadow: 0 0 0px 1000px #e5e7eb inset;
+}
